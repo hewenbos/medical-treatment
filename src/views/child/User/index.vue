@@ -75,6 +75,7 @@
             :key="index"
             is-link
             :border="false"
+            @click="router.push(item.path)"
           >
             <template #icon>
               <span><MyIcons :name="`user-tool-0${index + 1}`" /></span>
@@ -110,31 +111,31 @@ getUserInfo()
 const QuickList = [
   {
     title: '我的问诊',
-    path: ''
+    path: '/user/consult'
   },
   {
     title: '我的处方',
-    path: ''
+    path: '/'
   },
   {
     title: '家庭档案',
-    path: ''
+    path: '/user/patient'
   },
   {
     title: '地址管理',
-    path: ''
+    path: '/user/address'
   },
   {
     title: '我的评价',
-    path: ''
+    path: '/'
   },
   {
     title: '官⽅客服',
-    path: ''
+    path: '/'
   },
   {
     title: '设置',
-    path: ''
+    path: '/'
   }
 ]
 

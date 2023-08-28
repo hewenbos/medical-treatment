@@ -40,6 +40,12 @@ const router = createRouter({
           meta: { title: '个人中心' }
         }
       ]
+    },
+    {
+      path: '/user/patient',
+      name: 'patient',
+      component: () => import('../views/child/Patient/index.vue'),
+      meta: { title: '个人中心 - 家庭档案' }
     }
   ]
 })

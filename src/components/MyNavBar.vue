@@ -16,7 +16,9 @@ defineProps<{
   title?: string
   RightText?: string
 }>()
-
+const emits = defineEmits<{
+  (e: 'click-rigth'): void
+}>()
 const onClickLeft = () => {
   console.log(history)
   if (history.state?.back) {
@@ -25,10 +27,6 @@ const onClickLeft = () => {
     router.push('/')
   }
 }
-
-const emits = defineEmits<{
-  (e: 'click-rigth'): void
-}>()
 
 const onClickRight = () => {
   emits('click-rigth')
