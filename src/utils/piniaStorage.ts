@@ -1,5 +1,4 @@
 import type { PiniaPluginContext } from 'pinia'
-
 import { toRaw } from 'vue'
 
 const __piniaName__ = 'HC_PINIA'
@@ -18,8 +17,14 @@ const storeStorage = (key?: string) => {
 
     const data = getStorage(`${key ? key : __piniaName__}-${store.$id}`)
     store.$subscribe(() => {
-      console.log(store)
-      setStorage(`${key ? key : __piniaName__}-${store.$id}`, toRaw(store.$state))
+      let obj = {}
+      for (const key in store.$state) {
+        obj = {
+          [key]: toRaw(store.$state[key])
+        }
+      }
+
+      setStorage(`${key ? key : __piniaName__}-${store.$id}`, toRaw(obj))
     })
 
     return data
