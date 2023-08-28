@@ -1,5 +1,5 @@
 <template>
-  <div>sdsaddas</div>
+  <div>Article</div>
 </template>
 
 <script lang="ts" setup></script>

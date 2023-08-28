@@ -56,7 +56,7 @@ class Http {
           const user = useUserStore()
           user.removeToken()
           router.push(`/login?returnUrl=${router.currentRoute.value.fullPath}`)
-          return Promise
+          return Promise.reject(err)
         }
         return Promise.reject(err)
       }
