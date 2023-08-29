@@ -31,4 +31,10 @@
 import MyIcons from './MyIcons.vue'
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep() {
+  .van-tabbar-item--active {
+    color: var(--cp-primary);
+  }
+}
+</style>

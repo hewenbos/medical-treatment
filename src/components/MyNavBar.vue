@@ -12,15 +12,18 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 const router = useRouter()
-defineProps<{
+const props = defineProps<{
   title?: string
   RightText?: string
+  back?: () => void
 }>()
 const emits = defineEmits<{
   (e: 'click-rigth'): void
 }>()
 const onClickLeft = () => {
-  console.log(history)
+  if (props.back) {
+    return props.back()
+  }
   if (history.state?.back) {
     router.back()
   } else {

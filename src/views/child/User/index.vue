@@ -161,6 +161,7 @@ const logout = () => {
   box-sizing: border-box;
   min-height: calc(100vh - 50px);
   padding-bottom: 60px;
+  background: linear-gradient(180deg, rgba(176, 218, 213, 0.46), rgba(78, 189, 174, 0.1));
   &-header {
     width: 100%;
     height: 210px;
@@ -201,6 +202,9 @@ const logout = () => {
     padding: 0 15px;
     box-sizing: border-box;
     .Drug-orders {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
       .drug-top {
         display: flex;
         align-items: center;
@@ -227,7 +231,10 @@ const logout = () => {
       }
     }
     .Quick-Tools {
-      margin-top: 40px;
+      margin-top: 28px;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
       h2 {
         font-weight: 600;
         font-size: 18px;
