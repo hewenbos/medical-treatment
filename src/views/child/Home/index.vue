@@ -56,25 +56,30 @@
         </van-swipe-item>
       </van-swipe>
     </div>
-    <van-tabs v-model:active="active" shrink>
-      <van-tab title="关注"></van-tab>
-      <van-tab title="推荐"></van-tab>
-      <van-tab title="减脂"></van-tab>
-      <van-tab title="饮食"></van-tab>
+    <van-tabs v-model:active="active" shrink sticky>
+      <van-tab title="关注" name="like">
+        <DoctorRecommend></DoctorRecommend>
+        <MyList type="like"></MyList>
+      </van-tab>
+      <van-tab title="推荐" name="recommend"><MyList type="recommend"></MyList></van-tab>
+      <van-tab title="减脂" name="fatReduction"><MyList type="fatReduction"></MyList></van-tab>
+      <van-tab title="饮食" name="food"><MyList type="food"></MyList></van-tab>
     </van-tabs>
-    <MyList></MyList>
   </div>
 </template>
 
 <script lang="ts" setup>
 import MyIcons from '@/components/MyIcons.vue'
 import MyList from './component/MyList.vue'
+import type { tabType } from '@/types/knowledge'
+import DoctorRecommend from './component/DoctorRecommend.vue'
 import { ref } from 'vue'
-const active = ref(0)
+const active = ref<tabType>('recommend')
 </script>
 
 <style lang="scss" scoped>
 .home-page {
+  padding-bottom: 50px;
   &-header {
     height: 100px;
     position: relative;
