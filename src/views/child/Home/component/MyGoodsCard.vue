@@ -9,7 +9,9 @@
         </div>
       </div>
 
-      <van-button class="btn" round>{{ item.likeFlag == 1 ? '已关注' : '+ 关注' }}</van-button>
+      <van-button :loading="loading" @click="doctorFollow(item)" class="btn" round>{{
+        item.likeFlag == 1 ? '已关注' : '+ 关注'
+      }}</van-button>
     </div>
 
     <div class="page-card-main">
@@ -29,6 +31,9 @@
 
 <script lang="ts" setup>
 import type { KnowledgeList } from '@/types/knowledge'
+import doctorFun from '@/composable/DoctorCommend'
+
+const { loading, doctorFollow } = doctorFun('knowledge')
 defineProps<{
   item: KnowledgeList
 }>()

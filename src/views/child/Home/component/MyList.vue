@@ -40,8 +40,6 @@ const onLoad = async () => {
   if (KnowLedgeInfo.value.current >= data.pageTotal) {
     finished.value = true
   } else {
-    console.log(11)
-
     loading.value = false
     KnowLedgeInfo.value.current++
   }

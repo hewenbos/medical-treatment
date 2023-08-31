@@ -6,30 +6,36 @@
     </div>
 
     <div class="doctor-page-body">
-      <van-swipe :width="150" :loop="false" :show-indicators="false">
-        <van-swipe-item v-for="(item, index) in 5" :key="index">
-          <div class="card">
-            <van-image
-              round
-              width="70px"
-              height="70px"
-              src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-            />
-            <p class="name">王医生</p>
-            <p class="doce van-ellipsis">甘肃省妇幼保健院 中医皮肤科</p>
-            <span class="doce">副主任医生</span>
-
-            <p class="footer">
-              <van-button class="btn" round>+ 关注</van-button>
-            </p>
-          </div>
+      <van-swipe :width="(150 / 375) * widthValue" :loop="false" :show-indicators="false">
+        <van-swipe-item v-for="(item, index) in followGoods" :key="index">
+          <DoctorList :item="item"></DoctorList>
         </van-swipe-item>
       </van-swipe>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import DoctorList from './DoctorList.vue'
+import { getFllowListApi } from '@/services/Knowledge'
+import { ref } from 'vue'
+import type { PageParams, Doctor } from '@/types/knowledge'
+import ReSize from '@/composable/linentWidth'
+
+const { widthValue, WidthSize } = ReSize()
+WidthSize()
+const followInfo = ref<PageParams>({
+  current: 1,
+  pageSize: 5
+})
+const followGoods = ref<Doctor[]>()
+const getFllowList = async () => {
+  let res = await getFllowListApi(followInfo.value)
+  console.log(res)
+  followGoods.value = res.data.rows
+}
+getFllowList()
+</script>
 
 <style lang="scss" scoped>
 .doctor-page {
@@ -52,36 +58,6 @@
   }
   &-body {
     padding: 10px;
-    ::v-deep() {
-      .van-swipe-item {
-        .card {
-          border-radius: 15px;
-          height: 190px;
-          background-color: #fff;
-          text-align: center;
-          box-sizing: border-box;
-          padding: 10px;
-          margin-left: 15px;
-          width: 135px;
-          .name {
-            margin: 5px 0;
-          }
-          .doce {
-            font-size: 13px;
-            color: var(--cp-tip);
-          }
-        }
-      }
-    }
-  }
-}
-::v-deep() {
-  .btn {
-    width: 70px;
-    height: 30px;
-    color: #fff;
-    --van-button-default-background: var(--cp-primary);
-    font-size: 12px;
   }
 }
 </style>
