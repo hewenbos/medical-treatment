@@ -16,7 +16,7 @@
           <p class="title">问医生</p>
           <p class="docs">按科室查问医生</p>
         </van-col>
-        <van-col span="8" class="row">
+        <van-col span="8" class="row" @click="fast">
           <MyIcons name="home-graphic"></MyIcons>
           <p class="title">极速问诊</p>
           <p class="docs">20s医生极速回复</p>
@@ -73,8 +73,18 @@ import MyIcons from '@/components/MyIcons.vue'
 import MyList from './component/MyList.vue'
 import type { tabType } from '@/types/knowledge'
 import DoctorRecommend from './component/DoctorRecommend.vue'
+import { useRouter } from 'vue-router'
+import { useCoulstStore } from '@/stores/coulst'
+import { ConsultType } from '@/enum/couslt'
+const useCoulst = useCoulstStore()
+const router = useRouter()
 import { ref } from 'vue'
 const active = ref<tabType>('recommend')
+
+const fast = () => {
+  router.push('/consult/fast')
+  useCoulst.setType(ConsultType.Fast)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -46,6 +46,18 @@ const router = createRouter({
       name: 'patient',
       component: () => import('../views/child/Patient/index.vue'),
       meta: { title: '个人中心 - 家庭档案' }
+    },
+    {
+      path: '/consult/fast',
+      name: 'fast',
+      component: () => import('../views/child/consult/ConsultFast.vue'),
+      meta: { title: '急速问诊' }
+    },
+    {
+      path: '/consult/dep',
+      name: 'dep',
+      component: () => import('../views/child/Dep/ConsultDep.vue'),
+      meta: { title: '选择科室' }
     }
   ]
 })
