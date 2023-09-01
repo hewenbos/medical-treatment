@@ -18,7 +18,7 @@ defineProps<{
     name: string
     value: string | number
   }[]
-  modelValue: string | number
+  modelValue: string | number | undefined
 }>()
 const emits = defineEmits<{
   (e: 'update:modelValue', value: string | number): void
@@ -34,7 +34,7 @@ const BtnStatus = (value: string | number) => {
   width: 65px;
   height: 35px;
   background-color: var(--cp-bg);
-  margin: 0 10px;
+  margin-right: 10px;
   text-align: center;
   line-height: 35px;
   border-radius: 5px;

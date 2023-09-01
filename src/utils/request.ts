@@ -49,8 +49,6 @@ class Http {
         return response.data
       },
       (err) => {
-        console.log(111)
-
         if (err.response.status == 401) {
           showToast(err.response.data.message)
           const user = useUserStore()
@@ -58,6 +56,11 @@ class Http {
           router.push(`/login?returnUrl=${router.currentRoute.value.fullPath}`)
           return Promise.reject(err)
         }
+        if (err.response.status == 413) {
+          showToast('图片太大,请再次选择图片')
+          return Promise.reject(err)
+        }
+
         return Promise.reject(err)
       }
     )

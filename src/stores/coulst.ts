@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { PartialCoulst } from '@/types/couslt'
+import type { PartialCoulst, PickConsult } from '@/types/couslt'
 import { ConsultType, IllnessType } from '@/enum/couslt'
 export const useCoulstStore = defineStore('coulst', () => {
   const coulstInfo = ref<PartialCoulst>({})
@@ -16,9 +16,7 @@ export const useCoulstStore = defineStore('coulst', () => {
   }
 
   //设置图文问诊 (详情 时间 是否就诊 图片)
-  const setIllness = (
-    illness: Pick<PartialCoulst, 'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'>
-  ) => {
+  const setIllness = (illness: PickConsult) => {
     coulstInfo.value.illnessDesc = illness.illnessDesc
     coulstInfo.value.illnessTime = illness.illnessTime
     coulstInfo.value.consultFlag = illness.consultFlag

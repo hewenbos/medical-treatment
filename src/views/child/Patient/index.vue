@@ -1,9 +1,19 @@
 <template>
   <div>
-    <MyNavBar title="家庭档案" />
+    <MyNavBar :title="isChange ? '选择患者' : '家庭档案'" />
 
     <div class="patientList">
-      <div class="list1" v-for="item in patientList" :key="item.id">
+      <div class="patient-change" v-if="isChange">
+        <h3>请选择患者信息</h3>
+        <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+      </div>
+      <div
+        @click="select(item)"
+        class="list1"
+        v-for="item in patientList"
+        :class="{ select: item.id == parinetId }"
+        :key="item.id"
+      >
         <div class="listLeft">
           <div class="itemTop">
             <span class="name">{{ item.name }}</span>
@@ -57,6 +67,10 @@
         <van-button size="large" @click="delPatient" round>删除</van-button>
       </div>
     </van-popup>
+
+    <div class="footer">
+      <van-button @click="next" type="primary" size="large" round>下一步</van-button>
+    </div>
   </div>
 </template>
 
@@ -71,15 +85,36 @@ import validator from 'id-validator'
 import { showToast } from 'vant'
 import { getAddPatientApi, getEditPatientApi, getDelPatientApi } from '@/services/user'
 import { showConfirmDialog } from 'vant'
+import { useRoute } from 'vue-router'
+import { useCoulstStore } from '@/stores/coulst'
+import { useRouter } from 'vue-router'
+
+const useCoulst = useCoulstStore()
+const router = useRouter()
+const route = useRoute()
 const patientList = ref<patientType[]>()
 const getUserPatient = async () => {
   let res = await getUserPatientApi()
   console.log(res)
   patientList.value = res.data
+
+  if (isChange.value && patientList.value.length) {
+    const find = patientList.value.find((item) => item.defaultFlag == 1)
+    if (find) {
+      parinetId.value = find.id as string
+    } else {
+      parinetId.value = patientList.value[0].id as string
+    }
+  }
 }
 getUserPatient()
 
 const showRight = ref<boolean>(false)
+const parinetId = ref('')
+
+const select = (item: patientType) => {
+  parinetId.value = item.id as string
+}
 
 const addPatient = (item?: patientType) => {
   showRight.value = true
@@ -156,6 +191,18 @@ const delPatient = () => {
       // on cancel
     })
 }
+
+const isChange = computed(() => {
+  return route.query.isChange
+})
+
+const next = () => {
+  if (!parinetId.value) return showToast('请选择患者')
+
+  useCoulst.setPatient(parinetId.value)
+
+  router.push('/consult/pay')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -163,6 +210,17 @@ const delPatient = () => {
   box-sizing: border-box;
   padding: 0 15px;
   padding-top: 46px;
+  .patient-change {
+    padding: 15px;
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    p {
+      color: var(--cp-text3);
+    }
+  }
   .list1 {
     width: 100%;
     height: 106px;
@@ -174,6 +232,7 @@ const delPatient = () => {
     justify-content: space-between;
     box-sizing: border-box;
     padding: 0 10px;
+    border: 1px solid var(--cp-line);
     .listLeft {
       width: 90%;
       .itemTop {
@@ -219,6 +278,9 @@ const delPatient = () => {
       flex: 1;
     }
   }
+  .select {
+    border: 1px solid var(--cp-primary);
+  }
   .addList {
     width: 100%;
     height: 80px;
@@ -259,6 +321,27 @@ const delPatient = () => {
         color: #f00;
       }
     }
+  }
+}
+.footer {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  bottom: 30px;
+  ::v-deep() {
+    .van-button--primary {
+      background-color: var(--cp-primary);
+      border-color: var(--cp-primary);
+      height: 44px;
+      font-size: 14px;
+    }
+  }
+  .disabled {
+    background-color: var(--cp-bg);
+    border-color: var(--cp-bg);
+    color: var(--cp-tip);
   }
 }
 </style>

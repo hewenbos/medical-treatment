@@ -1,6 +1,6 @@
 import { ConsultType, IllnessTime, ConsultFlag, IllnessType } from '@/enum/couslt'
 
-type Image = {
+export type Image = {
   id: string
   url: string
 }
@@ -28,3 +28,34 @@ export type Consult = {
   couponId: string
 }
 export type PartialCoulst = Partial<Consult>
+
+//科室数据
+export type DepItem = {
+  id: '6976485709309804544'
+  name: '内科'
+}
+export type DepListType = DepItem & {
+  child: DepItem[]
+}
+
+export type PickConsult = Pick<
+  PartialCoulst,
+  'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
+>
+
+// 问诊订单预⽀付传参
+export type ConsultOrderPreParams = Pick<PartialConsult, 'type' | 'illnessType'>
+
+// 问诊订单预⽀付信息
+export type ConsultOrderPreData = {
+  // 积分抵扣
+  pointDeduction: number
+  // 优惠券抵扣
+  couponDeduction: number
+  // 优惠券ID
+  couponId: string
+  // 需付款
+  payment: number
+  // 实付款
+  actualPayment: number
+}
