@@ -24,6 +24,7 @@ const onClickLeft = () => {
   if (props.back) {
     return props.back()
   }
+
   if (history.state?.back) {
     router.back()
   } else {

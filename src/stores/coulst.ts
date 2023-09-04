@@ -37,6 +37,11 @@ export const useCoulstStore = defineStore('coulst', () => {
   const setDepId = (depId: string) => {
     coulstInfo.value.depId = depId
   }
+
+  //清空数据
+  const clear = () => {
+    coulstInfo.value = {}
+  }
   return {
     setType,
     coulstInfo,
@@ -44,6 +49,7 @@ export const useCoulstStore = defineStore('coulst', () => {
     setIllness,
     setPatient,
     setCoupon,
-    setDepId
+    setDepId,
+    clear
   }
 })

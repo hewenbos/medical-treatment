@@ -1,8 +1,8 @@
 export type tabType = 'like' | 'recommend' | 'fatReduction' | 'food'
 
-//首页tab数据参数
+//首页tab数据参数 问诊记录参数
 export type searchKnowledge = {
-  type: string
+  type: string | number
   current: number
   pageSize: number
 }

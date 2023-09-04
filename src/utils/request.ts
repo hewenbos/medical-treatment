@@ -42,7 +42,11 @@ class Http {
 
     this.services.interceptors.response.use(
       (response: AxiosResponse) => {
-        if (response.data.code !== 10000) {
+        if (
+          response.data.code !== 10000 &&
+          response.data.code !== 400 &&
+          response.data.code !== 422
+        ) {
           showToast(response.data.message)
           return Promise.reject(response)
         }
