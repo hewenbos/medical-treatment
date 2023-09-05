@@ -72,6 +72,10 @@ export type ConsultOrderPage = {
 }
 
 export type ConsultOrderItem = {
+  pointDeduction: number
+  couponDeduction: number
+  genderValue: string
+  actualPayment: number
   /**
    * 开药门诊必有-过敏史0无1有2不清楚
    */

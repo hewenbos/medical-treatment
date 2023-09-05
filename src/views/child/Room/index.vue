@@ -1,13 +1,11 @@
 <template>
-  <div></div>
+  <div>
+    <MyNavBar title="问诊室" />
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeRouteLeave } from 'vue-router'
-
-onBeforeRouteLeave(() => {
-  return '/'
-})
+import MyNavBar from '@/components/MyNavBar.vue'
 </script>
 
 <style lang="scss" scoped></style>

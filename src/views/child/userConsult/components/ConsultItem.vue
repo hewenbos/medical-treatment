@@ -5,7 +5,7 @@
       <p>{{ item.docInfo?.name || '极速问诊（自动分配医生）' }}</p>
       <span>{{ getFilter(item.status) }}</span>
     </div>
-    <div class="body">
+    <div class="body" @click="$router.replace(`/user/consult/${item.id}`)">
       <div class="body-row">
         <div class="body-label">病情描述</div>
         <div class="body-value">{{ item.illnessDesc }}</div>
@@ -29,7 +29,14 @@
         @click="cancelConsult(item)"
         >取消问诊</van-button
       >
-      <van-button type="primary" plain size="small" round>去⽀付</van-button>
+      <van-button
+        type="primary"
+        plain
+        size="small"
+        round
+        @click="$router.push('/user/consult/' + item.id)"
+        >去⽀付</van-button
+      >
     </div>
     <div class="foot" v-if="item.status == OrderType.ConsultWait">
       <van-button
@@ -44,18 +51,29 @@
       <van-button type="primary" plain size="small" round>继续沟通</van-button>
     </div>
     <div class="foot" v-if="item.status == OrderType.ConsultChat">
-      <van-button v-if="item.prescriptionId" class="gray" plain size="small" round
+      <van-button
+        v-if="item.prescriptionId"
+        @click="Prescription(item.prescriptionId)"
+        class="gray"
+        plain
+        size="small"
+        round
         >查看处方</van-button
       >
-      <van-button type="primary" plain size="small" round>继续沟通</van-button>
+      <van-button type="primary" plain size="small" round @click="$router.push('/room')"
+        >继续沟通</van-button
+      >
     </div>
     <div class="foot" v-if="item.status == OrderType.ConsultComplete">
-      <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect">
-        <template #reference>
-          <span>更多</span>
-        </template>
-      </van-popover>
-      <van-button class="gray" plain size="small" round>问诊记录</van-button>
+      <ConsultMore
+        v-model:showPopover="showPopover"
+        :disabled="!item.prescriptionId"
+        :prescriptionId="item.prescriptionId!"
+        :delId="item.id"
+      ></ConsultMore>
+      <van-button class="gray" plain size="small" round @click="$router.push('/room')"
+        >问诊记录</van-button
+      >
       <van-button type="primary" plain size="small" round>{{
         item.evaluateFlag == '0' ? '写评价' : '查看评价'
       }}</van-button>
@@ -72,9 +90,14 @@
 <script lang="ts" setup>
 import type { ConsultOrderItem } from '@/types/couslt'
 import { OrderType } from '@/enum/couslt'
+import ConsultMore from './ConsultMore.vue'
+import { getCancel, getDel } from '@/composable/Prescription'
+import getPrescription from '@/composable/Prescription'
 import { ref } from 'vue'
-import { getDelConsultApi, getCancelConsultApi } from '@/services/consultApi'
-import { showToast } from 'vant'
+
+const { cancelConsult, cancelLoading } = getCancel()
+
+const { Prescription } = getPrescription()
 const { item } = defineProps<{
   item: ConsultOrderItem
 }>()
@@ -107,37 +130,15 @@ const getFilter = (status: number) => {
   return find?.value
 }
 
-const onSelect = () => {}
-
-const actions = [{ text: '查看处方', disabled: !item.prescriptionId }, { text: '选项二' }]
-
-const showPopover = ref(false)
 const emits = defineEmits<{
   (e: 'delConsult', id: string): void
 }>()
 
-//删除订单
-const delConsult = async (id: string) => {
-  emits('delConsult', id)
-  await getDelConsultApi(id)
-  showToast('删除成功')
-}
+const { delConsult } = getDel((id) => {
+  emits('delConsult', id as string)
+})
 
-//取消订单
-const cancelLoading = ref(false)
-const cancelConsult = async (item: ConsultOrderItem) => {
-  cancelLoading.value = true
-  try {
-    await getCancelConsultApi(item.id)
-    showToast('取消成功')
-    item.status = OrderType.ConsultCancel
-    item.statusValue = '已取消'
-  } catch {
-    console.log(11)
-  } finally {
-    cancelLoading.value = false
-  }
-}
+const showPopover = ref(false)
 </script>
 
 <style lang="scss" scoped>
@@ -181,8 +182,10 @@ const cancelConsult = async (item: ConsultOrderItem) => {
     }
   }
   .foot {
-    text-align: right;
     padding: 0 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     .gray {
       margin-right: 10px;
     }

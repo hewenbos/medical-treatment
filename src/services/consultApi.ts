@@ -5,7 +5,8 @@ import type {
   ConsultOrderPreParams,
   ConsultOrderPreData,
   PartialCoulst,
-  ConsultOrderPage
+  ConsultOrderPage,
+  ConsultOrderItem
 } from '@/types/couslt'
 import type { searchKnowledge } from '@/types/knowledge'
 import type { patientType } from '@/types/user'
@@ -57,4 +58,14 @@ export const getDelConsultApi = (id: string) => {
 //取消订单
 export const getCancelConsultApi = (id: string) => {
   return axios.put('/patient/order/cancel/' + id)
+}
+
+//查看处方
+export const getPrescriptionApi = (id: string) => {
+  return axios.get<{ id: string; url: string }>('/patient/consult/prescription/' + id)
+}
+
+//问诊详情
+export const getDetailApi = (id: string) => {
+  return axios.get<ConsultOrderItem>('/patient/consult/order/detail?orderId=' + id)
 }

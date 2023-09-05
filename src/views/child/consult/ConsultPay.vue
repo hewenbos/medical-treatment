@@ -32,57 +32,24 @@
       button-text="立即支付"
       @click="onSubmit"
     />
-
-    <van-action-sheet
+    <MyPay
       v-model:show="show"
-      title="选择支付方式"
-      :close-on-popstate="false"
-      :closeable="false"
-      :before-close="closeSheet"
-    >
-      <div class="content">
-        <p class="price">{{ '￥' + payList?.actualPayment.toFixed(2) }}</p>
-
-        <van-cell-group>
-          <van-cell title="微信支付" @click="paymentMethod = 0">
-            <template #icon>
-              <MyIcons name="consult-wechat" />
-            </template>
-            <template #extra>
-              <van-checkbox :checked="paymentMethod === 0"></van-checkbox>
-            </template>
-          </van-cell>
-          <van-cell title="支付宝支付" @click="paymentMethod = 1">
-            <template #icon>
-              <MyIcons name="consult-alipay" />
-            </template>
-            <template #extra>
-              <van-checkbox :checked="paymentMethod === 1"></van-checkbox>
-            </template>
-          </van-cell>
-        </van-cell-group>
-
-        <van-button type="primary" block round @click="payMenoy">立即支付</van-button>
-      </div>
-    </van-action-sheet>
+      :actualPayment="payList.actualPayment"
+      :orderId="orderId"
+      @orderIdEvent="orderIdEvent"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import MyNavBar from '@/components/MyNavBar.vue'
-import MyIcons from '@/components/MyIcons.vue'
 import { showDialog, showToast } from 'vant'
-import {
-  getorderPerApi,
-  getPatientInfoAPI,
-  getPatientOrderApi,
-  getPayMenoyApi
-} from '@/services/consultApi'
+import MyPay from '@/components/MyPay.vue'
+import { getorderPerApi, getPatientInfoAPI, getPatientOrderApi } from '@/services/consultApi'
 import { useCoulstStore } from '@/stores/coulst'
 import type { ConsultOrderPreData } from '@/types/couslt'
 import type { patientType } from '@/types/user'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { showConfirmDialog } from 'vant'
 import { ref, onMounted } from 'vue'
 const router = useRouter()
 //禁止回退
@@ -95,7 +62,7 @@ const status = ref(false)
 
 const show = ref(false)
 const orderId = ref('')
-const paymentMethod = ref<0 | 1>()
+
 const onSubmit = async () => {
   if (!status.value) return showToast('请勾选支付协议')
   loading.value = true
@@ -110,38 +77,9 @@ const onSubmit = async () => {
   useCoulst.clear()
 }
 
-const closeSheet = () => {
-  return showConfirmDialog({
-    title: '关闭支付',
-    message: '取消⽀付将⽆法获得医⽣回复，医⽣接诊名额有限，是否确认关闭？',
-    confirmButtonText: '继续支付',
-    cancelButtonText: '取消支付'
-  })
-    .then(() => {
-      return false
-    })
-    .catch(() => {
-      orderId.value = ''
-      router.push('/user/consult')
-      return true
-    })
+const orderIdEvent = () => {
+  orderId.value = ''
 }
-
-const payUrl = ref('')
-const payMenoy = async () => {
-  console.log(paymentMethod)
-
-  if (paymentMethod.value === undefined) return showToast('请选择支付方式')
-
-  let res = await getPayMenoyApi({
-    paymentMethod: paymentMethod.value,
-    orderId: orderId.value,
-    payCallback: 'http://localhost:5173/room'
-  })
-  payUrl.value = res.data.payUrl
-  window.location.href = payUrl.value
-}
-
 const payList = ref<ConsultOrderPreData>()
 const getorderPer = async () => {
   const res = await getorderPerApi({
@@ -166,8 +104,6 @@ getPatientInfo()
 const loading = ref(false)
 
 onMounted(async () => {
-  console.log(useCoulst.coulstInfo)
-
   if (
     !useCoulst.coulstInfo.illnessDesc ||
     !useCoulst.coulstInfo.type ||
@@ -249,34 +185,6 @@ onMounted(async () => {
       .van-cell__value {
         font-size: 20px;
         color: red;
-      }
-    }
-  }
-
-  .content {
-    padding: 16px;
-
-    .price {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 600;
-      padding-bottom: 20px;
-    }
-
-    .van-cell {
-      align-items: center;
-
-      .icons {
-        font-size: 18px;
-        margin-right: 10px;
-      }
-
-      .title {
-        font-size: 18px;
-      }
-
-      .van-checkbox {
-        font-size: 16px;
       }
     }
   }

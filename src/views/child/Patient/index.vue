@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="patient-page">
     <MyNavBar :title="isChange ? '选择患者' : '家庭档案'" />
 
     <div class="patientList">
@@ -206,6 +206,9 @@ const next = () => {
 </script>
 
 <style lang="scss" scoped>
+.patient-page {
+  padding-bottom: 80px;
+}
 .patientList {
   box-sizing: border-box;
   padding: 0 15px;
@@ -324,12 +327,13 @@ const next = () => {
   }
 }
 .footer {
+  background-color: #fff;
   position: fixed;
   left: 0;
   width: 100%;
-  padding: 0 15px;
+  padding: 15px;
   box-sizing: border-box;
-  bottom: 30px;
+  bottom: 0px;
   ::v-deep() {
     .van-button--primary {
       background-color: var(--cp-primary);
