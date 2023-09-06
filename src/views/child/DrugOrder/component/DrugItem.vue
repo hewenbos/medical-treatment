@@ -1,22 +1,27 @@
 <template>
   <div class="drugItem">
-    <img src="http://img.39.net/yp/jzlr/296638.jpg" alt="" />
+    <img :src="item.avatar" alt="" />
     <div class="info">
       <p class="name">
-        <span class="drugName">伤湿止痛膏(羚锐)</span>
-        <span class="num">×8</span>
+        <span class="drugName">{{ item.name }}</span>
+        <span class="num">×{{ item.quantity }}</span>
       </p>
       <p class="size">
-        <span class="detail">处方药</span>
-        <span class="drugsize">7cm×10cm</span>
+        <span class="detail">{{ item.prescriptionFlag == 1 ? '处方药' : '' }}</span>
+        <span class="drugsize">{{ item.specs }}</span>
       </p>
-      <p class="price">￥110</p>
+      <p class="price">￥{{ item.amount }}</p>
     </div>
-    <div class="desc">外用。贴于患处.</div>
+    <div class="desc">{{ item.usageDosag }}</div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import type { Medical } from '@/types/drug'
+defineProps<{
+  item: Medical
+}>()
+</script>
 
 <style lang="scss" scoped>
 .drugItem {

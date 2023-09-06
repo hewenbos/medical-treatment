@@ -1,6 +1,6 @@
 <template>
   <div class="consult-page">
-    <MyNavBar title="问诊记录"></MyNavBar>
+    <MyNavBar :back="() => $router.push('/consult/fast')" title="问诊记录"></MyNavBar>
     <van-tabs sticky>
       <van-tab title="极速问诊"><ConsultList :type="ConsultType.Fast"></ConsultList></van-tab>
       <van-tab title="找医生"><ConsultList :type="ConsultType.Doctor"></ConsultList></van-tab>

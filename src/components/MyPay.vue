@@ -42,15 +42,16 @@ import { showConfirmDialog } from 'vant'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Pay } from '@/composable/Prescription'
-const { payMenoy } = Pay()
-const router = useRouter()
-const paymentMethod = ref<0 | 1>()
-
-defineProps<{
+const props = defineProps<{
   actualPayment: number
   orderId: string
   show: boolean
+  callBack: string
 }>()
+const { payMenoy } = Pay(props.callBack)
+const router = useRouter()
+const paymentMethod = ref<0 | 1>()
+
 const emits = defineEmits<{
   (e: 'update:show', show: boolean): void
   (e: 'orderIdEvent'): void

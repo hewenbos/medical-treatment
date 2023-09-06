@@ -65,7 +65,7 @@ export const getDel = (callBack?: (id?: string) => void) => {
 }
 
 //支付功能
-export const Pay = () => {
+export const Pay = (url: string) => {
   const payUrl = ref('')
   const payMenoy = async (paymentMethod: 0 | 1, orderId: string) => {
     if (paymentMethod === undefined) return showToast('请选择支付方式')
@@ -73,7 +73,7 @@ export const Pay = () => {
     const res = await getPayMenoyApi({
       paymentMethod: paymentMethod,
       orderId: orderId,
-      payCallback: 'http://localhost:5173/room'
+      payCallback: `http://localhost:5173${url}`
     })
     payUrl.value = res.data.payUrl
     window.location.href = payUrl.value

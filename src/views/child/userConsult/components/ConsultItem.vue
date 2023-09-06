@@ -48,7 +48,9 @@
         @click="cancelConsult(item)"
         >取消问诊</van-button
       >
-      <van-button type="primary" plain size="small" round>继续沟通</van-button>
+      <van-button type="primary" plain size="small" round @click="$router.push('/room')"
+        >继续沟通</van-button
+      >
     </div>
     <div class="foot" v-if="item.status == OrderType.ConsultChat">
       <van-button

@@ -1,6 +1,6 @@
 <template>
   <div class="detail-page" v-if="detailInfo">
-    <MyNavBar title="问诊详情" />
+    <MyNavBar :back="() => $router.push('/user/consult')" title="问诊详情" />
     <div class="detail-head">
       <div class="text">
         <h3>图文问诊 {{ detailInfo?.actualPayment + '元' }}</h3>
@@ -92,7 +92,7 @@
           <van-button round class="btn1" @click="cancelConsult(detailInfo, true)"
             >取消问诊</van-button
           >
-          <van-button round class="btn2" @click="show = !show">继续支付</van-button>
+          <van-button round class="btn2" @click="show = true">继续支付</van-button>
         </van-col>
         <van-col span="16" v-if="detailInfo.status == OrderType.ConsultComplete">
           <van-button round class="btn1" @click="router.push('/room')">问诊记录</van-button>
@@ -103,6 +103,7 @@
       </van-row>
     </div>
     <MyPay
+      :callBack="'/room'"
       :actualPayment="detailInfo.actualPayment"
       @orderIdEvent="orderIdEvent"
       v-model:show="show"

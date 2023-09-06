@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <MyNavBar title="问诊室" />
+  <div class="room-page">
+    <MyNavBar :back="() => $router.push('/user/consult')" title="问诊室" />
+    <van-button @click="$router.push('/drug/order?id=' + 6938582762364928)">购买药品</van-button>
   </div>
 </template>
 
@@ -8,4 +9,8 @@
 import MyNavBar from '@/components/MyNavBar.vue'
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.room-page {
+  padding-top: 46px;
+}
+</style>

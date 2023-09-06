@@ -33,6 +33,7 @@
       @click="onSubmit"
     />
     <MyPay
+      :callBack="'/room'"
       v-model:show="show"
       :actualPayment="payList.actualPayment"
       :orderId="orderId"

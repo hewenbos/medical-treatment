@@ -1,14 +1,17 @@
 <template>
-  <div class="drug-page">
+  <div class="drug-page" v-if="AddressInfo && perInfo">
     <MyNavBar title="药品支付" :backGround="true" />
 
     <div class="order-address">
       <p class="area">
         <van-icon name="location" />
-        北京 北京市 昌平区
+        {{ AddressInfo?.province }} {{ AddressInfo?.city }} {{ AddressInfo?.county }}
       </p>
-      <p class="detail">北京市昌平区黑马程序员总部</p>
-      <p>测试 132****0003</p>
+      <p class="detail">{{ AddressInfo?.addressDetail }}</p>
+      <p>
+        {{ AddressInfo?.receiver }}
+        {{ AddressInfo?.mobile.replace(/^(\d{3})\d+(\d{4})$/, '$1****$2') }}
+      </p>
     </div>
     <div class="order-medical">
       <div class="head">
@@ -16,12 +19,12 @@
         <div class="small">优医质保假一赔十</div>
       </div>
     </div>
-    <DrugList></DrugList>
+    <DrugList :Medicals="perInfo?.medicines!"></DrugList>
     <van-cell-group>
-      <van-cell title="药品金额" value="内容" />
-      <van-cell title="运费" value="内容" />
-      <van-cell title="优惠券" value="内容" />
-      <van-cell title="实付款" value="内容" />
+      <van-cell title="药品金额" :value="`￥${perInfo?.payment}`" />
+      <van-cell title="运费" :value="perInfo?.expressFee" />
+      <van-cell title="优惠券" :value="`-￥${perInfo?.couponDeduction}`" />
+      <van-cell title="实付款" :value="`￥${perInfo?.actualPayment}`" />
     </van-cell-group>
     <div class="tip">
       由于药品的特殊性，如非错发、漏发药品的情况，药品一经发出 不得退换，请核对药品信息无误后下单。
@@ -30,18 +33,81 @@
       <van-checkbox v-model="isAgree">我已同意 <a href="javascript:;">支付协议</a></van-checkbox>
     </div>
 
-    <van-submit-bar :price="3050" text-align="left">
-      <template #button> <van-button class="ImmediatePayment">立即支付</van-button> </template>
+    <van-submit-bar :price="perInfo?.actualPayment! * 100" text-align="left">
+      <template #button>
+        <van-button @click="onSubmit" class="ImmediatePayment">立即支付</van-button>
+      </template>
     </van-submit-bar>
+
+    <MyPay
+      :callBack="'/order/pay/result'"
+      :orderId="payId"
+      v-model:show="show"
+      :actualPayment="perInfo?.actualPayment!"
+    ></MyPay>
+  </div>
+
+  <div v-else>
+    <van-skeleton title :row="3" />
+    <van-skeleton title :row="3" />
+    <van-skeleton title :row="3" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import MyNavBar from '@/components/MyNavBar.vue'
 import DrugList from './component/DrugList.vue'
+import { getAddressApi, getOrderPerApi, getCreateDrugApi } from '@/services/drug'
+import MyPay from '@/components/MyPay.vue'
+import type { Address, OrderPre } from '@/types/drug'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { showToast } from 'vant'
+
+const route = useRoute()
+const show = ref(false)
+const prescriptionId = route.query.id
 
 const isAgree = ref(false)
+//收货地址
+const AddressInfo = ref<Address>()
+const getAddress = async () => {
+  let res = await getAddressApi()
+  console.log(res)
+
+  AddressInfo.value = res.data[0]
+}
+getAddress()
+
+//预支付信息接口
+const perInfo = ref<OrderPre>()
+const getOrderPer = async () => {
+  let res = await getOrderPerApi(prescriptionId as string)
+  console.log(res)
+  perInfo.value = res.data
+}
+getOrderPer()
+
+//支付
+const payId = ref('')
+const onSubmit = async () => {
+  if (!isAgree.value) return showToast('请勾选支付协议')
+  if (!AddressInfo.value?.id) return showToast('请选择收货地址')
+  if (!prescriptionId) return showToast('未找到处方')
+
+  let res = await getCreateDrugApi({
+    id: prescriptionId as string,
+    addressId: AddressInfo.value?.id
+  })
+
+  console.log(res)
+  if (res.code !== 400) {
+    payId.value = res.data.id
+    show.value = true
+  } else {
+    showToast(res.message)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -121,6 +187,11 @@ const isAgree = ref(false)
     background-color: var(--cp-primary);
     color: #fff;
     font-weight: 600;
+  }
+}
+::v-deep {
+  .van-skeleton__content {
+    margin: 15px 0;
   }
 }
 </style>

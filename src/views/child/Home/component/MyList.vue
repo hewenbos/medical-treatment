@@ -44,6 +44,7 @@ const onLoad = async () => {
     KnowLedgeInfo.value.current++
   }
 }
+onLoad()
 </script>
 
 <style lang="scss" scoped>
