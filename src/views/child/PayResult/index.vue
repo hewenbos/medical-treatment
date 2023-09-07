@@ -1,7 +1,7 @@
 <template>
   <div class="order-pay-result-page">
     <MyNavBar :back="() => $router.push('/home')" title="订单支付结果页"></MyNavBar>
-    <div class="result error" v-if="drugInfo?.status != OrderType.MedicineTake">
+    <div class="result error" v-if="drugInfo?.status == OrderType.MedicineCancel">
       <van-icon name="clear" />
       <p class="price">￥ {{ drugInfo?.actualPayment }}</p>
       <p class="status">⽀付失败</p>
@@ -23,19 +23,13 @@
 <script lang="ts" setup>
 import MyNavBar from '@/components/MyNavBar.vue'
 import { useRoute } from 'vue-router'
-import type { DrugInfoResponseType } from '@/types/drug'
-import { OrderType } from '@/enum/couslt'
 const route = useRoute()
-import { getDrugDetailApi } from '@/services/drug'
-import { ref } from 'vue'
+import { getDrugDetailInfo } from '@/composable/Drug'
 
-const drugInfo = ref<DrugInfoResponseType>()
-const getDrugDetail = async () => {
-  let res = await getDrugDetailApi(route.query.orderId as string)
-  console.log(res)
-  drugInfo.value = res.data
-}
+const { drugInfo, getDrugDetail } = getDrugDetailInfo(route.query.orderId as string)
 getDrugDetail()
+
+import { OrderType } from '@/enum/couslt'
 </script>
 
 <style lang="scss" scoped>

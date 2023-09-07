@@ -1,5 +1,6 @@
 import axios from '@/utils/request'
 import type { Address, OrderPre, DrugInfoResponseType } from '@/types/drug'
+import type { Logistics } from '@/types/logistics'
 //获取收货地址
 export const getAddressApi = () => {
   return axios.get<Address[]>('/patient/order/address')
@@ -18,4 +19,9 @@ export const getCreateDrugApi = (data: { id: string; addressId: string; couponId
 //获取药品订单详情
 export const getDrugDetailApi = (id: string) => {
   return axios.get<DrugInfoResponseType>(`/patient/medicine/order/detail/${id}`)
+}
+
+//获取物流信息
+export const getLogisticsApi = (id: string) => {
+  return axios.get<Logistics>(`/patient/order/${id}/logistics`)
 }

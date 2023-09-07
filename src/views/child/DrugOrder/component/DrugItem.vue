@@ -67,6 +67,10 @@ defineProps<{
       .drugsize {
         display: inline-block;
         color: var(--cp-tag);
+        width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     .price {
