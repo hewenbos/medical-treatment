@@ -97,7 +97,7 @@ const router = createRouter({
     },
     {
       path: '/order/pay/result',
-      name: 'pay',
+      name: 'orderPay',
       component: () => import('../views/child/PayResult/index.vue'),
       meta: { title: '订单支付成功' }
     },
